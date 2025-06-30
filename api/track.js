@@ -15,22 +15,23 @@ export default async function handler(req, res) {
     return res.status(401).json({ message: 'API key missing' });
   }
 
-  try {
-    const response = await fetch('https://api.17track.net/track/v2/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        '17token': apiKey,
-      },
-      body: JSON.stringify({
-        numbers: [tracking_number],
-        carrier: carrier_code,
-      }),
-    });
+ try {
+  const response = await fetch('https://api.17track.net/track/v2/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      '17token': apiKey,
+    },
+    body: JSON.stringify({
+      numbers: [tracking_number],
+      carrier: carrier_code,
+    }),
+  });
 
-    const data = await response.json();
-    return res.status(response.status).json(data);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error contacting 17TRACK', error: error.message });
-  }
+  const data = await response.json();
+  return res.status(response.status).json(data);
+} catch (error) {
+  console.error('Fetch Error:', error); // ✅ 添加日志
+  return res.status(500).json({ message: 'Error contacting 17TRACK', error: error.message });
+}
 }
